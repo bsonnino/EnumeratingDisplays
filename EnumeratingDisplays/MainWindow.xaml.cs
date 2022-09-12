@@ -1,24 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace EnumeratingDisplays
 {
-    internal record Rect(int X, int Y, int Width, int Height);
-    internal record Display(string DeviceName, Rect Bounds, Rect WorkingArea, double ScalingFactor);
+    public record Rect(int X, int Y, int Width, int Height);
+    public record Display(string DeviceName, Rect Bounds, Rect WorkingArea, double ScalingFactor);
 
     public partial class MainWindow : Window
     {
@@ -32,35 +21,27 @@ namespace EnumeratingDisplays
 
         private void InitializeDisplayCanvas()
         {
-            InitializeCanvasWithWinForms();
+            var displayList = new DisplayList();
+            _displays = displayList.Displays;
+            InitializeCanvasWithDisplays();
         }
 
-        private void InitializeCanvasWithWinForms()
+        private void InitializeCanvasWithDisplays()
         {
             var minX = 0;
             var minY = 0;
             var maxX = 0;
             var maxY = 0;
-            foreach (var screen in Screen.AllScreens)
+            foreach (var display in _displays)
             {
-                if (minX > screen.WorkingArea.X)
-                    minX = screen.WorkingArea.X;
-                if (minY > screen.WorkingArea.Y)
-                    minY = screen.WorkingArea.Y;
-                if (maxX < screen.WorkingArea.X + screen.WorkingArea.Width)
-                    maxX = screen.WorkingArea.X + screen.WorkingArea.Width;
-                if (maxY < screen.WorkingArea.Y + screen.WorkingArea.Height)
-                    maxY = screen.WorkingArea.Y + screen.WorkingArea.Height;
-                
-                _displays.Add(new Display(screen.DeviceName,
-                    new Rect(screen.Bounds.Left,
-                                 screen.Bounds.Top,
-                                 screen.Bounds.Width,
-                                 screen.Bounds.Height),
-                        new Rect(screen.WorkingArea.Left,
-                                 screen.WorkingArea.Top,
-                                 screen.WorkingArea.Width,
-                                 screen.WorkingArea.Height), 1));
+                if (minX > display.WorkingArea.X)
+                    minX = display.WorkingArea.X;
+                if (minY > display.WorkingArea.Y)
+                    minY = display.WorkingArea.Y;
+                if (maxX < display.WorkingArea.X + display.WorkingArea.Width)
+                    maxX = display.WorkingArea.X + display.WorkingArea.Width;
+                if (maxY < display.WorkingArea.Y + display.WorkingArea.Height)
+                    maxY = display.WorkingArea.Y + display.WorkingArea.Height;
             }
             DisplayCanvas.Width = maxX - minX;
             DisplayCanvas.Height = maxY - minY;
