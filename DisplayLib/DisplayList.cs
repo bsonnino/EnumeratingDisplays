@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Gdi;
 
 namespace EnumeratingDisplays
 {
+    public record Rect(int X, int Y, int Width, int Height);
+    public record Display(string DeviceName, Rect Bounds, Rect WorkingArea, double ScalingFactor);
+
+
     public class DisplayList
     {
         private List<Display> _displays = new List<Display>();

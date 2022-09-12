@@ -1,14 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
 using System.Windows.Media;
 
 namespace EnumeratingDisplays
 {
-    public record Rect(int X, int Y, int Width, int Height);
-    public record Display(string DeviceName, Rect Bounds, Rect WorkingArea, double ScalingFactor);
-
     public partial class MainWindow : Window
     {
         public MainWindow()
